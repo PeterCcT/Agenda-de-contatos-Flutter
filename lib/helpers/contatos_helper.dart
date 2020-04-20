@@ -19,7 +19,7 @@ class HelperContato {
 
   Database _db;
 
-  Future<Database>get db async {
+  Future<Database> get db async {
     if (_db != null) {
       return _db;
     } else {
@@ -42,6 +42,64 @@ class HelperContato {
                 ",$emailBd text,$telBd text, $imgBd text)");
       },
     );
+  }
+
+  Future<Contato> salvarContato(Contato contato) async {
+    Database bdContato = await db;
+    contato.id = await bdContato.insert(nomeBd, contato.toMap());
+    return contato;
+  }
+
+  Future<Contato> obterContato(int id) async {
+    Database bdContato = await db;
+    List<Map> map = await bdContato.query(
+      nomeBd,
+      columns: [idBd, nomeBd, emailBd, telBd, imgBd],
+      where: "$idBd = ?",
+      whereArgs: [id],
+    );
+    if (map.length > 0) {
+      return Contato.fromMap(map.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<int> deletarContato(int id) async {
+    Database bdContato = await db;
+    return await bdContato.delete(nomeBd, where: "$idBd = ?", whereArgs: [id]);
+  }
+
+  Future<Contato> editarContato(Contato contato) async {
+    Database bdContato = await db;
+    bdContato.update(
+      nomeBd,
+      contato.toMap(),
+      where: "$idBd = ?",
+      whereArgs: [contato.id],
+    );
+  }
+
+  Future<List> listarDados() async {
+    Database bdContato = await db;
+    List listMap = await bdContato.rawQuery("select * from $nomeBd");
+    List<Contato> listaContatos = List();
+    for (Map map in listMap) {
+      listaContatos.add(Contato.fromMap(map));
+    }
+    return listaContatos;
+  }
+
+  Future<int> quantNumeros() async {
+    Database bdContato = await db;
+    return Sqflite.firstIntValue(
+      await bdContato.rawQuery("select count(*) from $nomeBd"),
+    );
+  }
+
+  close() async {
+    Database bdContato = await db;
+    bdContato.close();
   }
 }
 
