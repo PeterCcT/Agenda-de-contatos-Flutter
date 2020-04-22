@@ -15,6 +15,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    super.initState();
     helper.listarContatos().then(
       (lista) {
         setState(() {
@@ -63,7 +64,7 @@ class _HomeState extends State<Home> {
                   image: DecorationImage(
                     image: contatos[index].img != null
                         ? FileImage(File(contatos[index].img))
-                        : AssetImage("image/contato.png"),
+                        : AssetImage("images/contato.png"),
                   ),
                 ),
               ),

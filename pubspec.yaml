@@ -42,7 +42,7 @@ flutter:
   uses-material-design: true
 
   assets:
-   - images/contato.png
+    - images/contato.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

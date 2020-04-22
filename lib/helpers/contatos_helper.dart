@@ -109,7 +109,7 @@ class Contato {
   String email;
   String telefone;
   String img;
-  //construtor
+  
   Contato.fromMap(Map map) {
     id = map[idBd];
     nome = map[nomeBd];
@@ -117,6 +117,8 @@ class Contato {
     telefone = map[telBd];
     img = map[imgBd];
   }
+
+  Contato();
 
   //métodos
   Map toMap() {
