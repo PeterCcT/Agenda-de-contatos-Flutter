@@ -132,6 +132,5 @@ class _HomeState extends State<Home> {
         await helper.salvarContato(recuperarContao);
       }
     }
-    ;
   }
 }
