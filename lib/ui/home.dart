@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:agenda_contatos/ui/contatos.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_contatos/helpers/contatos_helper.dart';
 
@@ -16,13 +17,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    helper.listarContatos().then(
-      (lista) {
-        setState(() {
-          contatos = lista;
-        });
-      },
-    );
+    _obterContatos();
   }
 
   @override
@@ -34,7 +29,9 @@ class _HomeState extends State<Home> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _paginaContato();
+        },
         splashColor: Colors.greenAccent,
         child: Icon(Icons.add),
         backgroundColor: Colors.redAccent,
@@ -43,7 +40,7 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.all(10),
         itemCount: contatos.length,
         itemBuilder: (context, index) {
-          return _cards(context,index);
+          return _cards(context, index);
         },
       ),
     );
@@ -51,6 +48,9 @@ class _HomeState extends State<Home> {
 
   Widget _cards(BuildContext context, int index) {
     return GestureDetector(
+      onTap: () {
+        _paginaContato(contato: contatos[index]);
+      },
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -103,5 +103,35 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void _obterContatos() {
+    helper.listarContatos().then(
+      (lista) {
+        setState(() {
+          contatos = lista;
+        });
+      },
+    );
+  }
+
+  void _paginaContato({Contato contato}) async {
+    final recuperarContao = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaginaContato(
+          contato: contato,
+        ),
+      ),
+    );
+    if (recuperarContao != null) {
+      if (contatos != null) {
+        await helper.editarContato(recuperarContao);
+        _obterContatos();
+      } else {
+        await helper.salvarContato(recuperarContao);
+      }
+    }
+    ;
   }
 }
