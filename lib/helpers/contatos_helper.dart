@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'dart:async';
-import 'package:flutter/rendering.dart';
 import 'package:sqflite/sqflite.dart';
 
 //colunas do database
@@ -70,7 +69,7 @@ class HelperContato {
     return await bdContato.delete(nomeBd, where: "$idBd = ?", whereArgs: [id]);
   }
 
-  Future<Contato> editarContato(Contato contato) async {
+  editarContato(Contato contato) async {
     Database bdContato = await db;
     bdContato.update(
       nomeBd,
@@ -80,7 +79,7 @@ class HelperContato {
     );
   }
 
-  Future<List> listarDados() async {
+  Future<List> listarContatos() async {
     Database bdContato = await db;
     List listMap = await bdContato.rawQuery("select * from $nomeBd");
     List<Contato> listaContatos = List();
