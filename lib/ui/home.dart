@@ -4,6 +4,8 @@ import 'package:agenda_contatos/ui/contatos.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_contatos/helpers/contatos_helper.dart';
 
+enum Sort { sortAZ, sortZA }
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -27,6 +29,21 @@ class _HomeState extends State<Home> {
         title: Text("Agenda de contatos"),
         backgroundColor: Colors.red,
         centerTitle: true,
+        actions: <Widget>[
+          PopupMenuButton<Sort>(
+            itemBuilder: (context) => <PopupMenuEntry<Sort>>[
+              const PopupMenuItem<Sort>(
+                child: Text("Ordenar de A-Z"),
+                value: Sort.sortAZ,
+              ),
+              const PopupMenuItem<Sort>(
+                child: Text("Ordenar de Z-A"),
+                value: Sort.sortZA,
+              ),
+            ],
+            onSelected: _sortList,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -133,6 +150,26 @@ class _HomeState extends State<Home> {
         _obterContatos();
       }
     }
+  }
+
+  void _sortList(Sort tipo) {
+    switch (tipo) {
+      case Sort.sortAZ:
+        contatos.sort(
+          (a, b) {
+           return a.nome.toLowerCase().compareTo(b.nome.toLowerCase());
+          },
+        );
+        break;
+      case Sort.sortZA:
+        contatos.sort(
+          (a, b) {
+           return b.nome.toLowerCase().compareTo(a.nome.toLowerCase());
+          },
+        );
+        break;
+    }
+    setState(() {});
   }
 
   void _mostrarOpcoes(BuildContext context, int index) {
