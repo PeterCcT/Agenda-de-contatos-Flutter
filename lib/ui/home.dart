@@ -82,6 +82,7 @@ class _HomeState extends State<Home> {
                     image: contatos[index].img != null
                         ? FileImage(File(contatos[index].img))
                         : AssetImage("images/contato.png"),
+                        fit: BoxFit.cover 
                   ),
                 ),
               ),
