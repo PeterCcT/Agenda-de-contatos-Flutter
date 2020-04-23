@@ -16,6 +16,7 @@ class _PaginaContatoState extends State<PaginaContato> {
   Contato _editarContato;
   bool _editou = false;
   final _nomeController = TextEditingController();
+  final _nomeFoco = FocusNode();
   final _emailController = TextEditingController();
   final _telController = TextEditingController();
   @override
@@ -34,89 +35,133 @@ class _PaginaContatoState extends State<PaginaContato> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: Text(_editarContato.nome ?? "Novo contato"),
-        centerTitle: true,
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.group_add),
-        backgroundColor: Colors.redAccent,
-        onPressed: () {},
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: _editarContato.img != null
-                      ? FileImage(
-                          File(_editarContato.img),
-                        )
-                      : AssetImage("images/contato.png"),
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.red,
+          title: Text(_editarContato.nome ?? "Novo contato"),
+          centerTitle: true,
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.group_add),
+          backgroundColor: Colors.redAccent,
+          onPressed: () {
+            if (_editarContato.nome != null &&
+                _nomeController.text.isNotEmpty) {
+              Navigator.pop(context, _editarContato);
+            } else {
+              FocusScope.of(context).requestFocus(_nomeFoco);
+            }
+          },
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: _editarContato.img != null
+                        ? FileImage(
+                            File(_editarContato.img),
+                          )
+                        : AssetImage("images/contato.png"),
+                  ),
                 ),
               ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Nome",
-                labelStyle:
-                    TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              TextField(
+                focusNode: _nomeFoco,
+                decoration: InputDecoration(
+                  labelText: "Nome",
+                  labelStyle:
+                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+                onChanged: (text) {
+                  _editou = true;
+                  setState(() {
+                    _editarContato.nome = text;
+                  });
+                },
+                keyboardType: TextInputType.text,
+                controller: _nomeController,
               ),
-              style: TextStyle(
-                fontSize: 18,
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Email",
+                  labelStyle:
+                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+                onChanged: (text) {
+                  _editou = true;
+                  _editarContato.email = text;
+                },
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
               ),
-              onChanged: (text) {
-                _editou = true;
-                setState(() {
-                  _editarContato.nome = text;
-                });
-              },
-              keyboardType: TextInputType.text,
-              controller: _nomeController,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Email",
-                labelStyle:
-                    TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Telefone",
+                  labelStyle:
+                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+                onChanged: (text) {
+                  _editou = true;
+                  _editarContato.email = text;
+                },
+                keyboardType: TextInputType.phone,
+                controller: _telController,
               ),
-              style: TextStyle(
-                fontSize: 18,
-              ),
-              onChanged: (text) {
-                _editou = true;
-                _editarContato.email = text;
-              },
-              keyboardType: TextInputType.emailAddress,
-              controller: _emailController,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Telefone",
-                labelStyle:
-                    TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              style: TextStyle(
-                fontSize: 18,
-              ),
-              onChanged: (text) {
-                _editou = true;
-                _editarContato.email = text;
-              },
-              keyboardType: TextInputType.phone,
-              controller: _telController,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+      onWillPop: _pop,
     );
+  }
+
+  Future<bool> _pop() {
+    if (_editou) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Descartar alterações?"),
+            content: Text(
+                "Suas alterações serão descartadas, ceretza que deseja continuar?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Sim"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text("Não"),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return Future.value(false);
+    }else{
+      return Future.value(true);
+    }
   }
 }
