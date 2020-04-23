@@ -72,7 +72,7 @@ class _PaginaContatoState extends State<PaginaContato> {
                               File(_editarContato.img),
                             )
                           : AssetImage("images/contato.png"),
-                          fit: BoxFit.cover 
+                          fit: BoxFit.scaleDown 
                     ),
                   ),
                 ),
