@@ -140,16 +140,16 @@ class _PaginaContatoState extends State<PaginaContato> {
           return AlertDialog(
             title: Text("Descartar alterações?"),
             content: Text(
-                "Suas alterações serão descartadas, ceretza que deseja continuar?"),
+                "Suas alterações serão descartadas, certeza que deseja continuar?"),
             actions: <Widget>[
               FlatButton(
-                child: Text("Sim"),
+                child: Text("Não"),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               FlatButton(
-                child: Text("Não"),
+                child: Text("Sim"),
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pop(context);

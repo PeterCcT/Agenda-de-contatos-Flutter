@@ -13,10 +13,10 @@ class _HomeState extends State<Home> {
   HelperContato helper = HelperContato();
 
   List<Contato> contatos = List();
-
   @override
   void initState() {
     super.initState();
+     print(helper.listarContatos());
     _obterContatos();
   }
 
