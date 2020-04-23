@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-     print(helper.listarContatos());
+    print(helper.listarContatos());
     _obterContatos();
   }
 
@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
   Widget _cards(BuildContext context, int index) {
     return GestureDetector(
       onTap: () {
-        _paginaContato(contato: contatos[index]);
+        _mostrarOpcoes(context, index);
       },
       child: Card(
         child: Padding(
@@ -132,5 +132,66 @@ class _HomeState extends State<Home> {
         await helper.salvarContato(recuperarContao);
       }
     }
+  }
+
+  void _mostrarOpcoes(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BottomSheet(
+            onClosing: () {},
+            builder: (context) {
+              return Container(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    FlatButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Ligar',
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    Divider(),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _paginaContato(contato: contatos[index]);
+                      },
+                      child: Text(
+                        'Editar',
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    Divider(),
+                    FlatButton(
+                      onPressed: () {
+                        helper.deletarContato(contatos[index].id);
+                        setState(() {
+                          contatos.removeAt(index);
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: Text(
+                        'Excluir',
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            });
+      },
+    );
   }
 }
