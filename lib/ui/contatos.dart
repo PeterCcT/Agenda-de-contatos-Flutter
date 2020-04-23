@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:agenda_contatos/helpers/contatos_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +48,7 @@ class _PaginaContatoState extends State<PaginaContato> {
           onPressed: () {
             if (_editarContato.nome != null &&
                 _nomeController.text.isNotEmpty) {
-                  _editarContato.id = UniqueKey().toString();
+              _editarContato.id = UniqueKey().toString();
               Navigator.pop(context, _editarContato);
             } else {
               FocusScope.of(context).requestFocus(_nomeFoco);
@@ -60,19 +60,31 @@ class _PaginaContatoState extends State<PaginaContato> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: _editarContato.img != null
-                        ? FileImage(
-                            File(_editarContato.img),
-                          )
-                        : AssetImage("images/contato.png"),
+              GestureDetector(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: _editarContato.img != null
+                          ? FileImage(
+                              File(_editarContato.img),
+                            )
+                          : AssetImage("images/contato.png"),
+                    ),
                   ),
                 ),
+                onTap: () {
+                  ImagePicker.pickImage(source: ImageSource.gallery).then(
+                    (image) {
+                      if (image == null)
+                        return null;
+                      else
+                        _editarContato.img = image.path;
+                    },
+                  );
+                },
               ),
               TextField(
                 focusNode: _nomeFoco,
