@@ -48,6 +48,7 @@ class _PaginaContatoState extends State<PaginaContato> {
           onPressed: () {
             if (_editarContato.nome != null &&
                 _nomeController.text.isNotEmpty) {
+                  _editarContato.id = UniqueKey().toString();
               Navigator.pop(context, _editarContato);
             } else {
               FocusScope.of(context).requestFocus(_nomeFoco);
@@ -103,7 +104,9 @@ class _PaginaContatoState extends State<PaginaContato> {
                 ),
                 onChanged: (text) {
                   _editou = true;
-                  _editarContato.email = text;
+                  setState(() {
+                    _editarContato.email = text;
+                  });
                 },
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
@@ -119,7 +122,9 @@ class _PaginaContatoState extends State<PaginaContato> {
                 ),
                 onChanged: (text) {
                   _editou = true;
-                  _editarContato.email = text;
+                  setState(() {
+                    _editarContato.telefone = text;
+                  });
                 },
                 keyboardType: TextInputType.phone,
                 controller: _telController,
@@ -160,7 +165,7 @@ class _PaginaContatoState extends State<PaginaContato> {
         },
       );
       return Future.value(false);
-    }else{
+    } else {
       return Future.value(true);
     }
   }

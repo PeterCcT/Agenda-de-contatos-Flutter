@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:agenda_contatos/ui/contatos.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_contatos/helpers/contatos_helper.dart';
@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
   }
 
   void _paginaContato({Contato contato}) async {
-    final recuperarContao = await Navigator.push(
+    final recuperarContato = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PaginaContato(
@@ -124,12 +124,13 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
-    if (recuperarContao != null) {
-      if (contatos != null) {
-        await helper.editarContato(recuperarContao);
+    if (recuperarContato != null) {
+      if (contato != null) {
+        await helper.editarContato(recuperarContato);
         _obterContatos();
       } else {
-        await helper.salvarContato(recuperarContao);
+        await helper.salvarContato(recuperarContato);
+        _obterContatos();
       }
     }
   }
@@ -147,12 +148,15 @@ class _HomeState extends State<Home> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     FlatButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                        launch('tel:${contatos[index].telefone}');
+                      },
                       child: Text(
                         'Ligar',
                         style: TextStyle(
                           color: Colors.redAccent,
-                          fontSize: 20,
+                          fontSize: 15,
                         ),
                       ),
                     ),
@@ -166,7 +170,7 @@ class _HomeState extends State<Home> {
                         'Editar',
                         style: TextStyle(
                           color: Colors.redAccent,
-                          fontSize: 20,
+                          fontSize: 15,
                         ),
                       ),
                     ),
@@ -183,7 +187,7 @@ class _HomeState extends State<Home> {
                         'Excluir',
                         style: TextStyle(
                           color: Colors.redAccent,
-                          fontSize: 20,
+                          fontSize: 15,
                         ),
                       ),
                     ),

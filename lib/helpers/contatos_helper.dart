@@ -36,20 +36,20 @@ class HelperContato {
       caminhoBd,
       version: 1,
       onCreate: (Database db, int vRecente) async {
-        await db
-            .execute("create table $nomeBd($idBd int primary key,$nomeBd text"
-                ",$emailBd text,$telBd text, $imgBd text)");
+        await db.execute(
+            "create table $nomeBd($idBd varchar primary key,$nomeBd text"
+            ",$emailBd text,$telBd text, $imgBd text)");
       },
     );
   }
 
   Future<Contato> salvarContato(Contato contato) async {
     Database bdContato = await db;
-    contato.id = await bdContato.insert(nomeBd, contato.toMap());
+    await bdContato.insert(nomeBd, contato.toMap());
     return contato;
   }
 
-  Future<Contato> obterContato(int id) async {
+  Future<Contato> obterContato(String id) async {
     Database bdContato = await db;
     List<Map> map = await bdContato.query(
       nomeBd,
@@ -64,7 +64,7 @@ class HelperContato {
     }
   }
 
-  Future<int> deletarContato(int id) async {
+  Future<int> deletarContato(String id) async {
     Database bdContato = await db;
     return await bdContato.delete(nomeBd, where: "$idBd = ?", whereArgs: [id]);
   }
@@ -104,12 +104,12 @@ class HelperContato {
 
 class Contato {
   //atributos
-  int id;
+  String id;
   String nome;
   String email;
   String telefone;
   String img;
-  
+
   Contato.fromMap(Map map) {
     id = map[idBd];
     nome = map[nomeBd];
